@@ -1,3 +1,55 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+.fc-theme-standard .fc-scrollgrid, .fc-theme-standard td {
+    border: none;
+}
+
+.fc-daygrid-day-frame {
+    display: flex;
+}
+
+.fc-daygrid-day-top {
+    flex: 1;
+    justify-content: center;
+    align-items: center;
+}
+
+.fc-daygrid-day-events {
+    display: none;
+}
+
+.fc .fc-daygrid-day-number {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    padding: 10px;
+    border: 1px solid white;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background-color;
+    transition-duration: 200ms;
+}
+
+.fc .fc-daygrid-day-number:hover {
+    background-color: white;
+    color: black;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
