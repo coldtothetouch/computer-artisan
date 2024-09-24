@@ -31,7 +31,7 @@ const showingNavigationDropdown = ref(false);
                                 <NavLink :href="route('admin.services.index')" :active="route().current('admin.services.index')">
                                     Услуги
                                 </NavLink>
-                                <NavLink :href="route('admin.time')" :active="route().current('admin.time')">
+                                <NavLink :href="route('admin.times.index')" :active="route().current('admin.times.index')">
                                     Время записи
                                 </NavLink>
                                 <NavLink :href="route('admin.reviews')" :active="route().current('admin.reviews')">
@@ -57,7 +57,7 @@ const showingNavigationDropdown = ref(false);
                                     <path
                                         :class="{
                                             hidden: showingNavigationDropdown,
-                                            'inline-flex': !showingNavigationDropdown,
+                                            'inline-flex': !showingNavigationDropdown
                                         }"
                                         stroke-linecap="round"
                                         stroke-linejoin="round"
@@ -67,7 +67,7 @@ const showingNavigationDropdown = ref(false);
                                     <path
                                         :class="{
                                             hidden: !showingNavigationDropdown,
-                                            'inline-flex': showingNavigationDropdown,
+                                            'inline-flex': showingNavigationDropdown
                                         }"
                                         stroke-linecap="round"
                                         stroke-linejoin="round"
@@ -92,7 +92,7 @@ const showingNavigationDropdown = ref(false);
                         <ResponsiveNavLink :href="route('admin.services.index')" :active="route().current('admin.services.index')">
                             Услуги
                         </ResponsiveNavLink>
-                        <ResponsiveNavLink :href="route('admin.time')" :active="route().current('admin.time')">
+                        <ResponsiveNavLink :href="route('admin.times.index')" :active="route().current('admin.times.index')">
                             Время записи
                         </ResponsiveNavLink>
                         <ResponsiveNavLink :href="route('admin.reviews')" :active="route().current('admin.reviews')">

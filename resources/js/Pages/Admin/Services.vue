@@ -72,7 +72,7 @@ const deleteService = ref(false)
                         <div v-if="!categories || categories.length === 0">
                             Вы еще не добавили категории услуги
                         </div>
-                        <table v-else class="table-auto w-full border rounded-lg ">
+                        <table v-else class="table-auto w-full border rounded-lg">
                             <thead>
                             <tr class="bg-gray-100">
                                 <th class="text-left p-3">Название</th>

@@ -13,13 +13,8 @@ use Inertia\Response;
 
 class AppointmentController extends Controller
 {
-    public function create()
-    {
-        
-   }
-
     public function store()
     {
-        
+
    }
 }
