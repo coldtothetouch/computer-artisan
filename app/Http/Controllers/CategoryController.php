@@ -10,15 +10,10 @@ use Inertia\Response;
 
 class CategoryController extends Controller
 {
-    public function index()
-    {
-        //
-    }
-
     public function store(Request $request)
     {
         $data = $request->validate([
-           'name' => 'required|string'
+            'name' => 'required|string'
         ]);
 
         return response([
