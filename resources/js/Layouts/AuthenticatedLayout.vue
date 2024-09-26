@@ -34,7 +34,7 @@ const showingNavigationDropdown = ref(false);
                                 <NavLink :href="route('admin.times.index')" :active="route().current('admin.times.index')">
                                     Время записи
                                 </NavLink>
-                                <NavLink :href="route('admin.reviews')" :active="route().current('admin.reviews')">
+                                <NavLink :href="route('admin.reviews.index')" :active="route().current('admin.reviews.index')">
                                     Отзывы
                                 </NavLink>
                             </div>
@@ -95,7 +95,7 @@ const showingNavigationDropdown = ref(false);
                         <ResponsiveNavLink :href="route('admin.times.index')" :active="route().current('admin.times.index')">
                             Время записи
                         </ResponsiveNavLink>
-                        <ResponsiveNavLink :href="route('admin.reviews')" :active="route().current('admin.reviews')">
+                        <ResponsiveNavLink :href="route('admin.reviews.index')" :active="route().current('admin.reviews.index')">
                             Отзывы
                         </ResponsiveNavLink>
                     </div>

@@ -3,6 +3,7 @@
 use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\TimeController;
 use Illuminate\Support\Facades\Route;
@@ -19,13 +20,12 @@ Route::group([
 
     Route::resource('services', ServiceController::class)->only(['index', 'store', 'update', 'destroy']);
     Route::resource('categories', CategoryController:: class)->only(['store', 'update', 'destroy']);
+    Route::resource('reviews', ReviewController::class)->only(['index', 'store', 'update', 'destroy']);
 
     Route::get('times', [TimeController::class, 'index'])->name('times.index');
     Route::post('times', [TimeController::class, 'store'])->name('times.store');
     Route::post('times/update', [TimeController::class, 'update'])->name('times.update');
     Route::delete('times/{time}/delete', [TimeController::class, 'delete'])->name('times.destroy');
-
-    Route::inertia('/reviews', 'Admin/Reviews')->name('reviews');
 });
 
 Route::group([
