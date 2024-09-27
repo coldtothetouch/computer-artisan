@@ -18,14 +18,14 @@ const showingNavigationDropdown = ref(false);
                         <div class="flex">
                             <!-- Logo -->
                             <div class="shrink-0 text-xl flex items-center">
-                                <Link :href="route('admin.appointments')">
+                                <Link :href="route('admin.appointments.index')">
                                     Admin Panel
                                 </Link>
                             </div>
 
                             <!-- Navigation Links -->
                             <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                                <NavLink :href="route('admin.appointments')" :active="route().current('admin.appointments')">
+                                <NavLink :href="route('admin.appointments.index')" :active="route().current('admin.appointments.index')">
                                     Заявки
                                 </NavLink>
                                 <NavLink :href="route('admin.services.index')" :active="route().current('admin.services.index')">
@@ -86,7 +86,7 @@ const showingNavigationDropdown = ref(false);
                     class="sm:hidden"
                 >
                     <div class="pt-2">
-                        <ResponsiveNavLink :href="route('admin.appointments')" :active="route().current('admin.appointments')">
+                        <ResponsiveNavLink :href="route('admin.appointments.index')" :active="route().current('admin.appointments.index')">
                             Заявки
                         </ResponsiveNavLink>
                         <ResponsiveNavLink :href="route('admin.services.index')" :active="route().current('admin.services.index')">

@@ -14,7 +14,7 @@ class AuthController extends Controller
         $request->authenticate();
         $request->session()->regenerate();
 
-        return redirect()->intended(route('admin.appointments', absolute: false));
+        return redirect()->intended(route('admin.appointments.index', absolute: false));
     }
 
     public function logout(Request $request): RedirectResponse

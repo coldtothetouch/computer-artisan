@@ -6,26 +6,44 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\TimeController;
+use App\Models\Review;
+use App\Models\ServiceCategory;
+use App\Models\Time;
 use Illuminate\Support\Facades\Route;
+use Inertia\Inertia;
 
-Route::inertia('/', 'Index');
-Route::resource('appointment', AppointmentController::class)->only('store');
+Route::get('/', function () {
+    $times = Time::all();
+    $reviews = Review::all();
+    $categories = ServiceCategory::query()->with('services')->get();
+
+    return Inertia::render('Index', compact(['times', 'categories', 'reviews']));
+});
+
+Route::post('appointment', AppointmentController::class)->name('appointments.store');
 
 Route::group([
     'as' => 'admin.',
     'prefix' => 'admin',
     'middleware' => 'auth',
 ], function () {
-    Route::inertia('appointments', 'Admin/Appointments')->name('appointments');
+    Route::inertia('appointments', 'Admin/Appointments')->name('appointments.index');
 
     Route::resource('services', ServiceController::class)->only(['index', 'store', 'update', 'destroy']);
     Route::resource('categories', CategoryController:: class)->only(['store', 'update', 'destroy']);
     Route::resource('reviews', ReviewController::class)->only(['index', 'store', 'update', 'destroy']);
 
-    Route::get('times', [TimeController::class, 'index'])->name('times.index');
-    Route::post('times', [TimeController::class, 'store'])->name('times.store');
-    Route::post('times/update', [TimeController::class, 'update'])->name('times.update');
-    Route::delete('times/{time}/delete', [TimeController::class, 'delete'])->name('times.destroy');
+    Route::group([
+        'as' => 'times.',
+        'prefix' => 'times',
+        'controller' => TimeController::class,
+    ], function () {
+        Route::get('/', 'index')->name('index');
+        Route::post('/', 'store')->name('store');
+        Route::post('/update', 'update')->name('update');
+        Route::delete('/{time}/delete', 'delete')->name('destroy');
+    });
+
 });
 
 Route::group([

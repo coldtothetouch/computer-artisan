@@ -42,6 +42,7 @@ function close() {
 function storeReview() {
     form.post(route('admin.reviews.store'), {
         onSuccess: () => {
+            form.reset()
             close();
         }
     })

@@ -1,5 +1,5 @@
 <script setup>
-import {Head, Link, usePage} from '@inertiajs/vue3';
+import {Head, Link, useForm, usePage} from '@inertiajs/vue3';
 import Modal from "@/Components/Modal.vue";
 import Swiper from 'swiper/bundle';
 import 'swiper/css/bundle'
@@ -12,8 +12,6 @@ import ruLocale from '@fullcalendar/core/locales/ru';
 const user = usePage().props.auth.user
 
 const showModal = ref(false)
-
-const select = ref(0);
 const scrollTop = ref(0)
 
 window.addEventListener('scroll', () => {
@@ -21,7 +19,7 @@ window.addEventListener('scroll', () => {
 });
 
 onMounted(() => {
-    const swiper = new Swiper('.swiper', {
+    new Swiper('.swiper', {
         loop: true,
         speed: 700,
         slidesPerView: document.body.clientWidth < 1000 ? 1 : 3,
@@ -32,9 +30,10 @@ onMounted(() => {
     });
 })
 
-defineProps({
-    services: Array,
+const props = defineProps({
     reviews: Array,
+    categories: Array,
+    times: Array,
 })
 
 const calendarOptions = {
@@ -44,11 +43,29 @@ const calendarOptions = {
     dayHeaders: false,
     aspectRatio: 1,
     dateClick: function (arg) {
-        alert('date click! ' + arg.dateStr)
+        form.date = arg.dateStr
     },
 }
 
 const isMenuOpen = ref(false)
+
+const selectedCategory = ref(props.categories[0])
+
+const form = useForm({
+    phone_number: '',
+    client_name: '',
+    date: '',
+    time: '',
+})
+
+function storeAppointment() {
+    form.post(route('appointments.store'), {
+        onSuccess: () => {
+            form.reset();
+        },
+        preserveScroll: true,
+    })
+}
 
 </script>
 
@@ -62,7 +79,7 @@ const isMenuOpen = ref(false)
                 <div>
                     максим фомин
                 </div>
-                <Link v-if="user" :href="route('admin.appointments')">Панель Администратора</Link>
+                <Link v-if="user" :href="route('admin.appointments.index')">Панель Администратора</Link>
             </div>
 
             <!-- Бургер-меню для мобильных -->
@@ -94,7 +111,7 @@ const isMenuOpen = ref(false)
                 </div>
                 <div class="text-2xl text-indigo-500">8 (495) 121 26 80</div>
                 <a @click="isMenuOpen = false" href="#appointment"
-                     class="border border-gray-500 border-opacity-50 text-indigo-500 rounded-full py-3 px-8 cursor-pointer hover:bg-gray-100">
+                   class="border border-gray-500 border-opacity-50 text-indigo-500 rounded-full py-3 px-8 cursor-pointer hover:bg-gray-100">
                     оставить заявку
                 </a>
             </div>
@@ -119,7 +136,7 @@ const isMenuOpen = ref(false)
                 8 (495) 121 26 80
             </div>
             <a @click="isMenuOpen = false" href="#appointment"
-                 class="mt-5 text-center border border-gray-500 border-opacity-50 text-indigo-500 rounded-full py-3 px-8 cursor-pointer hover:bg-gray-100">
+               class="mt-5 text-center border border-gray-500 border-opacity-50 text-indigo-500 rounded-full py-3 px-8 cursor-pointer hover:bg-gray-100">
                 оставить заявку
             </a>
         </div>
@@ -133,7 +150,7 @@ const isMenuOpen = ref(false)
                     максим фомин
                 </div>
                 <div class="flex items-center">
-                    <Link v-if="user" :href="route('admin.appointments')">Панель Администратора</Link>
+                    <Link v-if="user" :href="route('admin.appointments.index')">Панель Администратора</Link>
                 </div>
             </div>
 
@@ -168,7 +185,7 @@ const isMenuOpen = ref(false)
                     8 (495) 121 26 80
                 </div>
                 <a @click="isMenuOpen = false" href="#appointment"
-                     class="border border-gray-500 border-opacity-50 text-white rounded-full py-3 px-8 cursor-pointer bg-gray-400 hover:bg-gray-100 hover:text-indigo-500">
+                   class="border border-gray-500 border-opacity-50 text-white rounded-full py-3 px-8 cursor-pointer bg-gray-400 hover:bg-gray-100 hover:text-indigo-500">
                     оставить заявку
                 </a>
             </div>
@@ -198,14 +215,14 @@ const isMenuOpen = ref(false)
             </div>
         </div>
         <div class="flex flex-col lg:flex-row p-10 lg:py-[150px] h-full items-center justify-center gap-10">
-           <div class="flex flex-col gap-5">
-               <img class="max-h-[400px] max-w-[450px] rounded-[30px]" src="master.png" alt="master">
-               <a href="#appointment"
-                  style="background-image: linear-gradient(0.903turn, rgba(102, 51, 204, 1) 0%, rgba(99, 196, 253, 1) 100%);"
-                  class="order-4 py-5 px-10 rounded-full font-semibold text-xl text-nowrap">
-                   Оставить заявку
-               </a>
-           </div>
+            <div class="flex flex-col gap-5">
+                <img class="max-h-[400px] max-w-[450px] rounded-[30px]" src="master.png" alt="master">
+                <a href="#appointment"
+                   style="background-image: linear-gradient(0.903turn, rgba(102, 51, 204, 1) 0%, rgba(99, 196, 253, 1) 100%);"
+                   class="order-4 py-5 px-10 rounded-full font-semibold text-xl text-nowrap">
+                    Оставить заявку
+                </a>
+            </div>
             <div class="flex flex-col text-4xl lg:text-[80px] items-center lg:items-start">
                 <div class="text-left lg:leading-[90px]">Максим Фомин</div>
                 <div class="lg:leading-[90px] text-gray-100 text-center lg:text-left">Частный компьютерный мастер в
@@ -250,45 +267,31 @@ const isMenuOpen = ref(false)
         </div>
     </section>
 
-    <section id="services"
+    <section v-if="categories.length !== 0" id="services"
              class="bg-[#fafafa] py-[100px] px-10 text-center text-white flex flex-1 justify-center items-center">
         <div class="flex flex-col">
             <h1 class="text-3xl text-gray-400 mb-6">Цены на услуги</h1>
             <p class="text-4xl lg:text-[80px] text-black mb-20 lg:leading-[75px]">Всегда <span class="text-indigo-500">прозрачный</span>
                 расчет стоимости</p>
             <div class="rounded-full flex self-center border border-[#272727] mb-16">
-                <div @click="select = 0" :class="select === 0 ? 'bg-[#272727] text-white' : ''"
-                     class="text-black px-7 py-4 flex-1 cursor-pointer rounded-l-full text-nowrap">Ремонт ноутбуков
+                <div @click="selectedCategory = categories[0]"
+                     :class="selectedCategory === categories[0] ? 'bg-[#272727] text-white' : ''"
+                     class="text-black px-7 py-4 flex-1 cursor-pointer rounded-l-full text-nowrap">{{
+                        categories[0].name
+                    }}
                 </div>
-                <div @click="select = 1" :class="select === 1 ? 'bg-[#272727] text-white' : ''"
-                     class="text-black px-7 py-4 flex-1 cursor-pointer rounded-r-full text-nowrap">Компьютерная помощь
+                <div @click="selectedCategory = categories[1]"
+                     :class="selectedCategory === categories[1] ? 'bg-[#272727] text-white' : ''"
+                     class="text-black px-7 py-4 flex-1 cursor-pointer rounded-r-full text-nowrap">{{
+                        categories[1].name
+                    }}
                 </div>
             </div>
-            <div class="flex justify-center">
+            <div v-for="service in selectedCategory?.services" class="flex justify-center">
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 w-3/4 lg:max-w-[1000px]">
                     <div class="border-b border-black border-opacity-10 flex justify-between">
-                        <div class="text-[#363636]">Услуга</div>
-                        <div class="text-black font-semibold">от 1000 руб.</div>
-                    </div>
-                    <div class="border-b border-black border-opacity-10 flex justify-between">
-                        <div class="text-[#363636]">Услуга</div>
-                        <div class="text-black font-semibold">от 1000 руб.</div>
-                    </div>
-                    <div class="border-b border-black border-opacity-10 flex justify-between">
-                        <div class="text-[#363636]">Услуга</div>
-                        <div class="text-black font-semibold">от 1000 руб.</div>
-                    </div>
-                    <div class="border-b border-black border-opacity-10 flex justify-between">
-                        <div class="text-[#363636]">Услуга</div>
-                        <div class="text-black font-semibold">от 1000 руб.</div>
-                    </div>
-                    <div class="border-b border-black border-opacity-10 flex justify-between">
-                        <div class="text-[#363636]">Услуга</div>
-                        <div class="text-black font-semibold">от 1000 руб.</div>
-                    </div>
-                    <div class="border-b border-black border-opacity-10 flex justify-between">
-                        <div class="text-[#363636]">Услуга</div>
-                        <div class="text-black font-semibold">от 1000 руб.</div>
+                        <div class="text-[#363636]">{{ service.name }}</div>
+                        <div class="text-black font-semibold">от {{ service.price }} руб.</div>
                     </div>
                 </div>
             </div>
@@ -324,7 +327,7 @@ const isMenuOpen = ref(false)
         </div>
     </section>
 
-    <section id="reviews"
+    <section v-if="reviews.length !== 0 && reviews" id="reviews"
              class="py-[100px] lg:px-10 text-center text-white flex flex-col flex-1 justify-center items-center">
         <h1 class="text-3xl text-gray-400 mb-3">Отзывы</h1>
         <p class="text-4xl lg:text-[80px] text-black mb-20 lg:leading-[75px]"><span class="text-indigo-500">>5000</span>
@@ -333,87 +336,18 @@ const isMenuOpen = ref(false)
             <!-- Additional required wrapper -->
             <div class="swiper-wrapper">
                 <!-- Slides -->
-                <div class="swiper-slide cursor-pointer">
+                <div v-for="review in props.reviews" class="swiper-slide cursor-pointer">
                     <div
                         class="p-5 text-[#363636] flex flex-1 justify-center items-center">
                         <div class="flex flex-col gap-3">
                             <div class="flex gap-3 items-center">
-                                <img class="size-[50px] rounded-full" src="master.png" alt="avatar">
-                                <div class="text-xl">Вечеслав Машнов</div>
+                                <img class="size-[50px] object-cover rounded-full"
+                                     :src="'/storage/' + review.avatar_path" alt="avatar">
+                                <div class="text-xl">{{ review.author_name }}</div>
                             </div>
-                            <p class="text-left">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Animi
-                                expedita illo magnam molestias nihil repellendus suscipit. A architecto corporis
-                                delectus dolore doloribus error esse impedit, ipsum modi qui, quisquam quo!</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="swiper-slide cursor-pointer">
-                    <div
-                        class="p-5 text-[#363636] flex flex-1 justify-center items-center">
-                        <div class="flex flex-col gap-3">
-                            <div class="flex gap-3 items-center">
-                                <img class="size-[50px] rounded-full" src="master.png" alt="avatar">
-                                <div class="text-xl">Вечеслав Машнов</div>
-                            </div>
-                            <p class="text-left">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Animi
-                                expedita illo magnam molestias nihil repellendus suscipit. A architecto corporis
-                                delectus dolore doloribus error esse impedit, ipsum modi qui, quisquam quo!</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="swiper-slide cursor-pointer">
-                    <div
-                        class="p-5 text-[#363636] flex flex-1 justify-center items-center">
-                        <div class="flex flex-col gap-3">
-                            <div class="flex gap-3 items-center">
-                                <img class="size-[50px] rounded-full" src="master.png" alt="avatar">
-                                <div class="text-xl">Вечеслав Машнов</div>
-                            </div>
-                            <p class="text-left">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Animi
-                                expedita illo magnam molestias nihil repellendus suscipit. A architecto corporis
-                                delectus dolore doloribus error esse impedit, ipsum modi qui, quisquam quo!</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="swiper-slide cursor-pointer">
-                    <div
-                        class="p-5 text-[#363636] flex flex-1 justify-center items-center">
-                        <div class="flex flex-col gap-3">
-                            <div class="flex gap-3 items-center">
-                                <img class="size-[50px] rounded-full" src="master.png" alt="avatar">
-                                <div class="text-xl">Вечеслав Машнов</div>
-                            </div>
-                            <p class="text-left">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Animi
-                                expedita illo magnam molestias nihil repellendus suscipit. A architecto corporis
-                                delectus dolore doloribus error esse impedit, ipsum modi qui, quisquam quo!</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="swiper-slide cursor-pointer">
-                    <div
-                        class="p-5 text-[#363636] flex flex-1 justify-center items-center">
-                        <div class="flex flex-col gap-3">
-                            <div class="flex gap-3 items-center">
-                                <img class="size-[50px] rounded-full" src="master.png" alt="avatar">
-                                <div class="text-xl">Вечеслав Машнов</div>
-                            </div>
-                            <p class="text-left">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Architecto at
-                                commodi deleniti error, in necessitatibus nostrum quas quidem veniam voluptatem. A
-                                ducimus maxime quam quis, quos saepe? Nostrum, odit, temporibus.</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="swiper-slide cursor-pointer">
-                    <div
-                        class="p-5 text-[#363636] flex flex-1 justify-center items-center">
-                        <div class="flex flex-col gap-3">
-                            <div class="flex gap-3 items-center">
-                                <img class="size-[50px] rounded-full" src="master.png" alt="avatar">
-                                <div class="text-xl">Вечеслав Машнов</div>
-                            </div>
-                            <p class="text-left">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium
-                                animi consectetur cupiditate eum illo illum inventore ipsum laudantium modi molestiae,
-                                necessitatibus neque nobis numquam optio pariatur placeat quae repellat similique.</p>
+                            <p class="text-left">{{
+                                    review.body
+                                }}</p>
                         </div>
                     </div>
                 </div>
@@ -422,8 +356,33 @@ const isMenuOpen = ref(false)
     </section>
 
     <section id="appointment"
-             class="py-[100px] px-10 bg-indigo-500 text-center text-white flex flex-1 justify-center items-center">
+             class="py-[100px] px-10 bg-amber-500 text-center text-white flex justify-center gap-10">
         <FullCalendar :options="calendarOptions"/>
+        <div class="flex flex-col gap-5">
+
+            <div class="flex flex-col">
+                <label class="self-start" for="client_name">Как я могу к вам обращаться?</label>
+                <input v-model="form.client_name" id="client_name" type="text" class="bg-transparent rounded-lg">
+            </div>
+
+            <div class="flex flex-col">
+                <label class="self-start" for="client_name">Поделитесь своим номером</label>
+                <input v-model="form.phone_number" type="text" class="bg-transparent rounded-lg"/>
+            </div>
+
+            <div class="flex flex-wrap gap-3">
+                <div v-for="time in props.times"
+                     @click="form.time = time.time"
+                     class="cursor-pointer bg-indigo-500 rounded-full text-white pl-4 pr-3 py-2 flex items-center gap-3"
+                     :class="form.time === time.time ? 'bg-red-500' : ''"
+                >
+                    {{ time.time }}
+                </div>
+            </div>
+            <div @click="storeAppointment"
+                 class="cursor-pointer hover:bg-gray-100 hover:bg-opacity-20 py-2 px-5 border rounded-full">Записаться
+            </div>
+        </div>
     </section>
 
 
