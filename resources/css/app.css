@@ -40,6 +40,22 @@
     color: black;
 }
 
+.fc-daygrid-day-number {
+    background-color: transparent;
+    color: white;
+}
+
+.fc .fc-daygrid-day.fc-day-today {
+    background-color: transparent;
+}
+
+table .fc-scrollgrid-sync-table tr  {
+    height: 10px;
+}
+
+option:hover {
+    background-color: yellow;
+}
 
 
 

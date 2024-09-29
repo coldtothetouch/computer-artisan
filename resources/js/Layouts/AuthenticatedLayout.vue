@@ -42,6 +42,9 @@ const showingNavigationDropdown = ref(false);
 
                         <div class="hidden sm:flex sm:items-center sm:ms-6">
                             <!-- Settings Dropdown -->
+                            <DropdownLink href="/" as="button">
+                                Вернуться
+                            </DropdownLink>
                             <DropdownLink :href="route('logout')" method="post" as="button">
                                 Выйти
                             </DropdownLink>

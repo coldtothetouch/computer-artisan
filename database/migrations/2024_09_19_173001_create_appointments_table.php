@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\AppointmentStatusEnum;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -16,6 +17,8 @@ return new class extends Migration
             $table->date('date');
             $table->string('time', 5);
             $table->string('phone_number');
+            $table->string('service')->nullable();
+            $table->enum('status', AppointmentStatusEnum::toArray())->default(AppointmentStatusEnum::PENDING->value);
             $table->string('client_name');
             $table->timestamps();
         });

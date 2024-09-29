@@ -3,31 +3,24 @@
 use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\TimeController;
-use App\Models\Review;
-use App\Models\ServiceCategory;
-use App\Models\Time;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
 
-Route::get('/', function () {
-    $times = Time::all();
-    $reviews = Review::all();
-    $categories = ServiceCategory::query()->with('services')->get();
 
-    return Inertia::render('Index', compact(['times', 'categories', 'reviews']));
-});
+Route::get('/', HomeController::class);
 
-Route::post('appointment', AppointmentController::class)->name('appointments.store');
+Route::post('appointment', [AppointmentController::class, 'store'])->name('appointments.store');
 
 Route::group([
     'as' => 'admin.',
     'prefix' => 'admin',
     'middleware' => 'auth',
 ], function () {
-    Route::inertia('appointments', 'Admin/Appointments')->name('appointments.index');
+    Route::get('appointments', [AppointmentController::class, 'index'])->name('appointments.index');
+    Route::put('appointments/{appointment}/update', [AppointmentController::class, 'update'])->name('appointments.update');
 
     Route::resource('services', ServiceController::class)->only(['index', 'store', 'update', 'destroy']);
     Route::resource('categories', CategoryController:: class)->only(['store', 'update', 'destroy']);

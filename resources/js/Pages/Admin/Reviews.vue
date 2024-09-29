@@ -31,7 +31,7 @@ watch(() => props.reviews, (newReviews) => {
         />
         <div class="py-5">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
+                <div class="bg-white overflow-hidden shadow-sm p-6">
                     <div class="flex gap-3 items-center mb-3">
                         <h1 class="text-2xl font-semibold">Отзывы</h1>
                         <div @click="editReview = null; showReviewModal = true"

@@ -44,9 +44,8 @@ function close() {
 function storeService() {
     axios.post(route('admin.services.store'), form)
         .then(({data}) => {
-            emit('update:services', props.services.map((s) => {
-                return s.id === data.service.id ? data.service : s
-            }))
+            emit('update:services', [...props.services, data.service])
+            close()
         })
 }
 

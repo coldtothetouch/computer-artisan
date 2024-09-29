@@ -8,6 +8,7 @@ import FullCalendar from '@fullcalendar/vue3'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import interactionPlugin from '@fullcalendar/interaction'
 import ruLocale from '@fullcalendar/core/locales/ru';
+import Notification from "@/Components/Notification.vue";
 
 const user = usePage().props.auth.user
 
@@ -34,6 +35,29 @@ const props = defineProps({
     reviews: Array,
     categories: Array,
     times: Array,
+    appointments: Array,
+    services: Array,
+})
+
+const today = new Date()
+const year = today.getFullYear()
+const month = String(today.getMonth() + 1).padStart(2, '0')
+const day = String(today.getDate()).padStart(2, '0')
+const formattedDate = `${year}-${month}-${day}`;
+
+onMounted(() => {
+    document.querySelectorAll('.fc-daygrid-day-number').forEach(function (day) {
+        const selectedDay = today.toLocaleDateString('ru-RU', {
+            day: 'numeric',
+            month: 'long',
+            year: 'numeric'
+        });
+
+        if (day.ariaLabel === selectedDay) {
+            day.style.backgroundColor = 'white'
+            day.style.color = 'black'
+        }
+    })
 })
 
 const calendarOptions = {
@@ -44,9 +68,17 @@ const calendarOptions = {
     aspectRatio: 1,
     dateClick: function (arg) {
         form.date = arg.dateStr
+        form.time = ''
+
+        document.querySelectorAll('.fc-daygrid-day-number').forEach(function (day) {
+            day.style.backgroundColor = 'transparent';
+            day.style.color = 'white'
+        });
+
+        arg.dayEl.querySelectorAll('a')[0].style.backgroundColor = 'white'
+        arg.dayEl.querySelectorAll('a')[0].style.color = 'black'
     },
 }
-
 const isMenuOpen = ref(false)
 
 const selectedCategory = ref(props.categories[0])
@@ -54,23 +86,49 @@ const selectedCategory = ref(props.categories[0])
 const form = useForm({
     phone_number: '',
     client_name: '',
-    date: '',
+    date: formattedDate,
     time: '',
+    service: null,
 })
+
+const showNotification = ref(false);
 
 function storeAppointment() {
     form.post(route('appointments.store'), {
         onSuccess: () => {
-            form.reset();
+            form.phone_number = ''
+            form.client_name = ''
+            form.time = ''
+            form.service = ''
+        },
+        onError: (error) => {
+            console.log(error);
         },
         preserveScroll: true,
     })
+}
+
+const isBooked = function (time) {
+    const dayAppointments = props.appointments.filter((a) => {
+        return a.date === form.date
+    })
+
+    for (let i = 0; i < dayAppointments.length; i++) {
+        if (dayAppointments[i].time === time) {
+            return true
+        }
+    }
+
+    return false
 }
 
 </script>
 
 <template>
     <Head title="Главная"/>
+
+    <Notification v-model:show="form.hasErrors" :message="Object.values(form.errors)[0]"/>
+
     <header
         :class="scrollTop > 15 ? 'opacity-100 visible' : 'opacity-0 invisible'"
         class="transition-[opacity] duration-1000 ease-in-out z-40 fixed top-3 left-6 right-6 text-[#3e3e3e] bg-white bg-opacity-90 rounded-[20px]">
@@ -143,7 +201,7 @@ function storeAppointment() {
     </header>
 
     <section id="about"
-             class="bg-[url('img.jpg')] bg-cover bg-opacity-95 my-3 mx-6 rounded-[20px] text-center text-white">
+             class="bg-[url('/img.jpg')] bg-cover bg-opacity-95 my-3 mx-6 rounded-[20px] text-center text-white">
         <div class="flex justify-between bg-white bg-opacity-30 rounded-t-[20px] items-center px-6 md:px-10 py-3">
             <div class="flex items-center gap-5 text-sm font-semibold">
                 <div>
@@ -267,7 +325,7 @@ function storeAppointment() {
         </div>
     </section>
 
-    <section v-if="categories.length !== 0" id="services"
+    <section v-if="categories.length !== 0 && !categories" id="services"
              class="bg-[#fafafa] py-[100px] px-10 text-center text-white flex flex-1 justify-center items-center">
         <div class="flex flex-col">
             <h1 class="text-3xl text-gray-400 mb-6">Цены на услуги</h1>
@@ -355,27 +413,41 @@ function storeAppointment() {
         </div>
     </section>
 
-    <section id="appointment"
-             class="py-[100px] px-10 bg-amber-500 text-center text-white flex justify-center gap-10">
+    <section v-if="times.length !== 0" id="appointment"
+             class="py-[100px] px-10 bg-black text-center text-white flex justify-center gap-10">
         <FullCalendar :options="calendarOptions"/>
         <div class="flex flex-col gap-5">
 
             <div class="flex flex-col">
                 <label class="self-start" for="client_name">Как я могу к вам обращаться?</label>
-                <input v-model="form.client_name" id="client_name" type="text" class="bg-transparent rounded-lg">
+                <input placeholder="Иван" v-model="form.client_name" id="client_name" type="text" class="bg-transparent rounded-lg">
             </div>
 
             <div class="flex flex-col">
                 <label class="self-start" for="client_name">Поделитесь своим номером</label>
-                <input v-model="form.phone_number" type="text" class="bg-transparent rounded-lg"/>
+                <input v-model="form.phone_number" placeholder="+7 ( . . . )  . . .  . . - . ." class="bg-transparent text-white rounded-lg">
+            </div>
+
+            <div class="flex flex-col gap-2">
+                <label class="self-start" for="service">Какую услугу я могу Вам оказать?</label>
+                <select v-model="form.service" id="service"
+                        class="bg-transparent rounded-lg border-gray-400">
+                    <option class="bg-transparent" :value="null">Другое (скажу по телефону)</option>
+                    <option class="bg-transparent" v-for="service in services" :value="service.name">{{
+                            service.name
+                        }}
+                    </option>
+                </select>
             </div>
 
             <div class="flex flex-wrap gap-3">
                 <div v-for="time in props.times"
-                     @click="form.time = time.time"
-                     class="cursor-pointer bg-indigo-500 rounded-full text-white pl-4 pr-3 py-2 flex items-center gap-3"
-                     :class="form.time === time.time ? 'bg-red-500' : ''"
-                >
+                     @click="isBooked(time.time) ? form.time = '' : form.time = time.time"
+                     class="rounded-full text-white pl-4 pr-3 py-2 flex items-center gap-3"
+                     :class="[
+                         isBooked(time.time) ? 'bg-red-500' : 'cursor-pointer bg-green-500',
+                         form.time === time.time ? 'outline outline-offset-4 outline-2 outline-green-500' : ''
+                     ]">
                     {{ time.time }}
                 </div>
             </div>
