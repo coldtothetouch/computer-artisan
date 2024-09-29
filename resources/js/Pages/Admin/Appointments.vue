@@ -50,7 +50,7 @@ function updateAppointmentStatus(appointment, status) {
                         <div @click="selectedStatus = 'any'; whereStatus()"
                              :class="selectedStatus === 'any' ? 'outline outline-offset-2 outline-2 outline-indigo-500' : ''"
                              class="cursor-pointer py-1 px-4 bg-indigo-500 flex items-center gap-2 rounded-full text-white">
-                            Все
+                            Все ({{props.appointments?.length}})
                         </div>
                         <div v-for="status in appointmentStatuses" @click="selectedStatus = status; whereStatus()"
                              :class="[
@@ -60,7 +60,7 @@ function updateAppointmentStatus(appointment, status) {
                                         selectedStatus === status ? 'outline outline-offset-2 outline-2 outline-indigo-500' : ''
                                     ]"
                              class="cursor-pointer py-1 px-4 bg-amber-500 flex items-center gap-2 rounded-full text-white">
-                            {{ status }}
+                            {{ status }}  ({{ props.appointments.filter(a => a.status === status).length }})
                         </div>
                     </div>
                     <table v-if="appointments.length !== 0" class="table-auto w-full border rounded-lg ">

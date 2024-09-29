@@ -19,6 +19,6 @@ class HomeController extends Controller
         $appointments = Appointment::all();
         $categories = ServiceCategory::query()->with('services')->get();
 
-        return Inertia::render('Index', compact(['times', 'categories', 'reviews', 'appointments', 'services']));
+        return Inertia::render('Index2', compact(['times', 'categories', 'reviews', 'appointments', 'services']));
     }
 }
