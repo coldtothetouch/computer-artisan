@@ -30,8 +30,8 @@ const submit = () => {
 <template>
     <Head title="Войти"/>
 
-    <div class="min-h-screen flex items-center justify-center p-5">
-        <div class="border border-gray-400 rounded-lg p-5 w-full sm:w-[300px]">
+    <div class="min-h-screen flex items-center justify-center p-2">
+        <div class="border border-gray-400 rounded-lg p-3 w-full sm:w-[300px]">
             <div v-if="status" class="mb-4 font-medium text-sm text-green-600">
                 {{ status }}
             </div>

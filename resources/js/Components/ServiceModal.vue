@@ -39,6 +39,7 @@ const emit = defineEmits(['close', 'update:delete', 'update:services'])
 
 function close() {
     emit('close')
+    emit('update:delete', false)
 }
 
 function storeService() {
@@ -74,17 +75,17 @@ function deleteService(service) {
 
 <template>
     <Modal :show="show" @close="close">
-        <div class="p-5 w-[350px]">
+        <div class="p-4 w-[400px]">
             <div v-if="props.delete">
                 <h1 v-if="service" class="text-2xl font-semibold mb-3">Удалить услугу</h1>
                 <p class="mb-3">Вы действительно хотите удалить услугу "{{ service?.name }}"?</p>
-                <div class="flex gap-3">
+                <div class="flex justify-center gap-3">
                     <button @click="$emit('update:delete', false); close()"
-                            class="py-2 flex-row px-5 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-100">
+                            class="py-2 px-5 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-100">
                         Отмена
                     </button>
                     <button @click="deleteService(service)"
-                            class="py-2 flex-row px-5 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-100">
+                            class="py-2 px-5 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-100">
                         Удалить
                     </button>
                 </div>
@@ -92,7 +93,7 @@ function deleteService(service) {
             <div v-else>
                 <h1 v-if="service" class="text-2xl font-semibold mb-3">Изменить услугу</h1>
                 <h1 v-else class="text-2xl font-semibold mb-3">Добавить услугу</h1>
-                <div class="flex flex-col gap-5 max-w-sm">
+                <div class="flex flex-col gap-3 max-w-sm">
                     <div class="flex flex-col gap-2">
                         <label for="category">Категория</label>
                         <select v-model="form.service_category_id" id="category"

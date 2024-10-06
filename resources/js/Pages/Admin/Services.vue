@@ -28,9 +28,9 @@ const deleteService = ref(false)
     <Head title="Услуги"/>
 
     <AuthenticatedLayout>
-        <div class="py-5">
+        <div class="py-4">
             <div class="max-w-7xl mx-auto sm:px-6 sm:text-sm lg:px-8">
-                <div class="flex flex-col gap-5">
+                <div class="flex flex-col gap-4">
                     <!--                    <div class="bg-white shadow-sm flex gap-5 h-[50px] px-10 text-sm font-medium">
                                             <div @click="tab = 'index'"
                                                  :class="tab === 'index' ? 'border-indigo-400 text-gray-900 border-opacity-100' : 'hover:border-opacity-100 hover:border-gray-300 border-transparent'"

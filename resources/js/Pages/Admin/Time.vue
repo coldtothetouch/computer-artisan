@@ -110,12 +110,12 @@ function deleteTime(time) {
     <Head title="Время записи"/>
 
     <AuthenticatedLayout>
-        <div class="py-5">
+        <div class="py-4">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="flex flex-col gap-5">
                     <div class="bg-white overflow-hidden shadow-sm p-6">
                         <h1 class="text-2xl font-semibold mb-3">Добавить время записи</h1>
-                        <div class="border-b flex gap-5 mb-5">
+                        <div class="border-b flex gap-4 mb-4">
                             <div @click="tab = 'one'"
                                  :class="tab === 'one' ? 'border-b border-indigo-500' : ''"
                                  class="py-3 cursor-pointer -m-[1px]">Добавить одно

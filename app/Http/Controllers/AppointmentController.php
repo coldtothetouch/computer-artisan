@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Enums\AppointmentStatusEnum;
 use App\Http\Resources\AppointmentResource;
 use App\Models\Appointment;
+use App\Services\NotificationServiceContract;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -40,7 +41,19 @@ class AppointmentController extends Controller
 
         $data['date'] = Carbon::createFromFormat('Y-m-d', $data['date'])->format('Y-m-d');
 
-        Appointment::query()->create($data);
+        $appointment = Appointment::query()->create($data);
+
+        if ($appointment) {
+            /** @var NotificationServiceContract $telegram */
+            $telegram = app(NotificationServiceContract::class);
+
+            $service = $appointment->service ?? 'своя';
+            $message = "🔥 Новая заявка!\n\nКлиент: {$appointment->client_name}\nТелефонный номер: {$appointment->phone_number}\nУслуга: {$service}";
+
+            $telegram::sendMessage($message);
+        }
+
+        session()->flash('message', 'Ваша заявка успешно отправлена');
 
         return back();
     }

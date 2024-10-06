@@ -28,7 +28,7 @@
     width: 40px;
     height: 40px;
     padding: 10px;
-    border: 1px solid white;
+    border: 1px solid black;
     border-radius: 50%;
     cursor: pointer;
     transition: background-color;
@@ -36,13 +36,13 @@
 }
 
 .fc .fc-daygrid-day-number:hover {
-    background-color: white;
-    color: black;
+    background-color: black;
+    color: white;
 }
 
 .fc-daygrid-day-number {
     background-color: transparent;
-    color: white;
+    color: black;
 }
 
 .fc .fc-daygrid-day.fc-day-today {
@@ -53,12 +53,20 @@ table .fc-scrollgrid-sync-table tr  {
     height: 10px;
 }
 
-option:hover {
-    background-color: yellow;
+.fc .fc-button-primary, .fc .fc-button-primary:hover, .fc .fc-button-primary:not(:disabled):active, .fc .fc-button-primary:focus, .fc .fc-button-primary:focus {
+    border: none;
+    background-color: transparent;
+    color: black;
+    box-shadow: none;
+    outline: none;
 }
 
-
-
+.fc .fc-button-primary:focus {
+    box-shadow: none;
+}
+.fc .fc-button-primary:not(:disabled).fc-button-active:focus, .fc .fc-button-primary:not(:disabled):active:focus {
+    box-shadow: none;
+}
 
 
 

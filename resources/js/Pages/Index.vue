@@ -419,7 +419,7 @@ const isBooked = function (time) {
         <div class="flex flex-col gap-5">
 
             <div class="flex flex-col">
-                <label class="self-start" for="client_name">Как я могу к вам обращаться?</label>
+                <label class="self-start" for="client_name">Как я могу к Вам обращаться?</label>
                 <input placeholder="Иван" v-model="form.client_name" id="client_name" type="text" class="bg-transparent rounded-lg">
             </div>
 

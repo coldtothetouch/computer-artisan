@@ -31,6 +31,7 @@ const emit = defineEmits(['close', 'update:delete', 'update:categories'])
 
 function close() {
     emit('close')
+    emit('update:delete', false)
 }
 
 function storeCategory() {
@@ -67,11 +68,11 @@ function deleteCategory(category) {
 
 <template>
     <Modal :show="show" @close="close">
-        <div class="p-5 max-w-2xl">
+        <div class="p-4 max-w-2xl">
             <div v-if="props.delete">
                 <h1 v-if="category" class="text-2xl font-semibold mb-3">Удалить категорию</h1>
                 <p class="mb-3">Вы действительно хотите удалить категорию "{{ category?.name }}"?</p>
-                <div class="flex gap-3">
+                <div class="flex justify-center gap-3">
                     <button @click="$emit('update:delete', false); close()"
                             class="py-2 flex-row px-5 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-100">
                         Отмена

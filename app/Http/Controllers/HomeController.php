@@ -17,7 +17,7 @@ class HomeController extends Controller
         $reviews = Review::all();
         $services = Service::all();
         $appointments = Appointment::all();
-        $categories = ServiceCategory::query()->with('services')->get();
+        $categories = ServiceCategory::query()->with('services')->has('services')->get();
 
         return Inertia::render('Index2', compact(['times', 'categories', 'reviews', 'appointments', 'services']));
     }

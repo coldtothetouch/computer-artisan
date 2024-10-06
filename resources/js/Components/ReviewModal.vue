@@ -92,11 +92,11 @@ const imagePath = computed(() => {
 
 <template>
     <Modal :show="show" @close="close">
-        <div class="p-5 w-[500px]">
+        <div class="p-4 w-[500px]">
             <div v-if="props.delete">
                 <h1 class="text-2xl font-semibold mb-3">Удалить отзыв</h1>
                 <p class="mb-3">Вы действительно хотите удалить этот отзыв?</p>
-                <div class="flex gap-3">
+                <div class="flex justify-center gap-3">
                     <button @click="close()"
                             class="py-2 flex-row px-5 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-100">
                         Отмена
@@ -137,7 +137,7 @@ const imagePath = computed(() => {
                     <textarea v-model="form.body" id="body"
                               class="border-gray-400 rounded-lg" type="text"
                               placeholder="Мастер очень понравился..."/>
-                   <div v-if="review" class="flex gap-2">
+                   <div v-if="review" class="flex justify-center gap-2">
                        <button @click="close()"
                                 class=" flex-1 py-2 flex-row px-5 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-100">
                            Отменить

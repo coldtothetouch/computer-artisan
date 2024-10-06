@@ -728,10 +728,6 @@ section,
     padding-bottom: 10px;
 }
 
-.resume .resume-item:last-child {
-    padding-bottom: 0;
-}
-
 .resume .resume-item::before {
     content: "";
     position: absolute;
@@ -850,9 +846,8 @@ section,
 --------------------------------------------------------------*/
 .services .service-item {
     background-color: var(--surface-color);
-    box-shadow: 0 5px 90px 0 rgba(0, 0, 0, 0.1);
+    box-shadow: 0 5px 30px 0 rgba(0, 0, 0, 0.1);
     height: 100%;
-    padding: 60px 30px;
     text-align: center;
     transition: 0.3s;
     border-radius: 5px;
@@ -899,7 +894,7 @@ section,
 }
 
 .services .service-item:hover {
-    box-shadow: 0 5px 35px 0 rgba(0, 0, 0, 0.1);
+    box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.1);
 }
 
 .services .service-item.item-cyan i {
@@ -1058,9 +1053,6 @@ section,
 /*--------------------------------------------------------------
 # Contact Section
 --------------------------------------------------------------*/
-.contact .info-item+.info-item {
-    margin-top: 40px;
-}
 
 .contact .info-item i {
     color: var(--accent-color);

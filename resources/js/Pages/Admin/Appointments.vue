@@ -8,8 +8,31 @@ const props = defineProps({
     appointmentStatuses: Array,
 })
 
-const appointments = ref([...props.appointments])
-const selectedStatus = ref('any')
+
+const monthMap = {
+    'янв.': 'January',
+    'фев.': 'February',
+    'мар.': 'March',
+    'апр.': 'April',
+    'мая.': 'May',
+    'июн.': 'June',
+    'июл.': 'July',
+    'авг.': 'August',
+    'сен.': 'September',
+    'окт.': 'October',
+    'ноя.': 'November',
+    'дек.': 'December',
+};
+
+const appointments = ref([...props.appointments.filter(a => {
+    let parts = a.date.split(' ');
+    const formattedDate = `${parts[2]}-${monthMap[parts[1]]}-${parts[0]}`
+    const date = new Date(formattedDate)
+
+    return date > new Date()
+})])
+
+const selectedStatus = ref('actual')
 
 function whereStatus() {
     appointments.value = [...props.appointments]
@@ -36,21 +59,42 @@ function updateAppointmentStatus(appointment, status) {
         })
 }
 
+
+function actualAppointments() {
+    appointments.value = [...props.appointments]
+
+    appointments.value = appointments.value.filter(a => {
+        let parts = a.date.split(' ');
+        const formattedDate = `${parts[2]}-${monthMap[parts[1]]}-${parts[0]}`
+        const date = new Date(formattedDate)
+
+        return date > new Date()
+    })
+}
+
 </script>
 
 <template>
     <Head title="Заявки"/>
 
     <AuthenticatedLayout>
-        <div class="py-5">
+        <div class="py-4">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="p-6 bg-white overflow-hidden shadow-sm">
                     <div class="flex gap-3 items-center mb-3">
                         <h1 class="text-2xl font-semibold">Мои заявки</h1>
-                        <div @click="selectedStatus = 'any'; whereStatus()"
-                             :class="selectedStatus === 'any' ? 'outline outline-offset-2 outline-2 outline-indigo-500' : ''"
+                        <div @click="selectedStatus = 'actual'; actualAppointments()"
+                             :class="selectedStatus === 'actual' ? 'outline outline-offset-2 outline-2 outline-indigo-500' : ''"
                              class="cursor-pointer py-1 px-4 bg-indigo-500 flex items-center gap-2 rounded-full text-white">
-                            Все ({{props.appointments?.length}})
+                            Актуальные ({{
+                                props.appointments.filter(a => {
+                                    let parts = a.date.split(' ');
+                                    const formattedDate = `${parts[2]}-${monthMap[parts[1]]}-${parts[0]}`
+                                    const date = new Date(formattedDate)
+
+                                    return date > new Date()
+                                }).length
+                            }})
                         </div>
                         <div v-for="status in appointmentStatuses" @click="selectedStatus = status; whereStatus()"
                              :class="[
@@ -60,7 +104,12 @@ function updateAppointmentStatus(appointment, status) {
                                         selectedStatus === status ? 'outline outline-offset-2 outline-2 outline-indigo-500' : ''
                                     ]"
                              class="cursor-pointer py-1 px-4 bg-amber-500 flex items-center gap-2 rounded-full text-white">
-                            {{ status }}  ({{ props.appointments.filter(a => a.status === status).length }})
+                            {{ status }} ({{ props.appointments.filter(a => a.status === status).length }})
+                        </div>
+                        <div @click="selectedStatus = 'any'; whereStatus()"
+                             :class="selectedStatus === 'any' ? 'outline outline-offset-2 outline-2 outline-indigo-500' : ''"
+                             class="cursor-pointer py-1 px-4 bg-gray-500 flex items-center gap-2 rounded-full text-white">
+                            Все ({{ props.appointments?.length }})
                         </div>
                     </div>
                     <table v-if="appointments.length !== 0" class="table-auto w-full border rounded-lg ">

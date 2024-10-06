@@ -2,6 +2,7 @@
 import {watch} from "vue";
 
 const props = defineProps({
+    type: String,
     show: {
         type: Boolean,
         default: false
@@ -23,7 +24,7 @@ watch(() => props.show, () => {
 
 <template>
     <teleport to="body">
-        <div v-show="props.show" class="fixed bottom-5 right-5 py-3 px-6 text-white bg-red-500 rounded-full">
+        <div v-show="props.show" :class="type === 'success' ? 'bg-green-500' : 'bg-red-500'" class="fixed bottom-5 right-5 py-3 px-6 text-white rounded-full">
             {{ message }}
         </div>
     </teleport>
